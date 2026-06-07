@@ -6,12 +6,25 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class StoreItemRequest extends FormRequest
 {
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
 
-    public function rules()
+    protected function prepareForValidation(): void
+    {
+        $input = $this->all();
+
+        array_walk($input, function (&$value) {
+            if (is_string($value)) {
+                $value = trim(strip_tags($value));
+            }
+        });
+
+        $this->merge($input);
+    }
+
+    public function rules(): array
     {
         return [
             'name' => 'required|string|max:255',
@@ -21,13 +34,10 @@ class StoreItemRequest extends FormRequest
         ];
     }
 
-    public function messages()
+    public function messages(): array
     {
         return [
             'name.required' => 'Nama item wajib diisi.',
-            'quantity.integer' => 'Jumlah harus angka bulat.',
-            'price.numeric' => 'Harga harus berupa angka.',
-            'category_id.exists' => 'Kategori tidak ditemukan.',
         ];
     }
 }
