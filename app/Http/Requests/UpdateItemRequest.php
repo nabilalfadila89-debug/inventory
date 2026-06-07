@@ -6,25 +6,31 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateItemRequest extends FormRequest
 {
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
 
-    public function rules()
+    protected function prepareForValidation(): void
     {
-        return [
-            'name' => 'sometimes|required|string|max:255',
-            'quantity' => 'sometimes|required|integer|min:0',
-            'price' => 'sometimes|required|numeric|min:0',
-            'category_id' => 'sometimes|required|exists:categories,id',
-        ];
+        $input = $this->all();
+
+        array_walk($input, function (&$value) {
+            if (is_string($value)) {
+                $value = trim(strip_tags($value));
+            }
+        });
+
+        $this->merge($input);
     }
 
-    public function messages()
+    public function rules(): array
     {
         return [
-            'sometimes.required' => 'Field ini diperlukan saat diubah.',
+            'name' => 'sometimes|string|max:255',
+            'quantity' => 'sometimes|integer|min:0',
+            'price' => 'sometimes|numeric|min:0',
+            'category_id' => 'sometimes|exists:categories,id',
         ];
     }
 }
