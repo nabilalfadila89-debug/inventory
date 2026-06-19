@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Http\Requests\StoreItemRequest;
 use App\Http\Requests\UpdateItemRequest;
 use App\Services\ItemService;
@@ -15,11 +16,19 @@ class ItemController extends Controller
         $this->svc = $svc;
     }
 
-    public function index()
+    public function index(Request $request)
     {
+        $items = $this->svc->all();
+
+        if ($request->filled('category_id')) {
+            $items = $items->filter(function ($item) use ($request) {
+                return $item->category_id == $request->category_id;
+            })->values();
+        }
+
         return response()->json([
             'status' => 'success',
-            'data' => $this->svc->all(),
+            'data' => $items,
             'message' => 'Berhasil menarik semua data Item'
         ]);
     }
