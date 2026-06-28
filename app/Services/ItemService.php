@@ -3,35 +3,64 @@
 namespace App\Services;
 
 use App\Models\Item;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Log;
 
 class ItemService
 {
-    public function all(): Collection
+    /**
+     * Mengambil semua item.
+     */
+    public function all()
     {
-        return Item::with('category')->get();
+        return Item::all();
     }
 
-    public function find(int $id): Item
+    /**
+     * Mengambil satu item berdasarkan ID.
+     */
+    public function find($id)
     {
-        return Item::with('category')->findOrFail($id);
+        return Item::findOrFail($id);
     }
 
-    public function create(array $data): Item
+    /**
+     * Menambahkan item baru.
+     */
+    public function create(array $data)
     {
+        Log::info('Create Item', $data);
+
         return Item::create($data);
     }
 
-    public function update(int $id, array $data): Item
+    /**
+     * Mengupdate item.
+     */
+    public function update($id, array $data)
     {
         $item = Item::findOrFail($id);
+
+        Log::info('Update Item', [
+            'id' => $item->id,
+            'data' => $data
+        ]);
+
         $item->update($data);
 
         return $item;
     }
 
-    public function delete(int $id): void
+    /**
+     * Menghapus item.
+     */
+    public function delete($id)
     {
-        Item::destroy($id);
+        $item = Item::findOrFail($id);
+
+        Log::info('Delete Item', [
+            'id' => $item->id
+        ]);
+
+        return $item->delete();
     }
 }

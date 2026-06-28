@@ -35,6 +35,9 @@ class ItemController extends Controller
 
     public function store(StoreItemRequest $req)
     {
+        // // Debugging
+        // dd($req->validated());
+
         $item = $this->svc->create($req->validated());
 
         return response()->json([
