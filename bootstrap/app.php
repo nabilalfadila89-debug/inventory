@@ -14,16 +14,16 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
 
         /*
-        |-----------------------------------------
+        |--------------------------------------------------------------------------
         | Middleware API (Sanctum)
-        |-----------------------------------------
-        | Jika kamu pakai Sanctum untuk API token,
-        | ini sudah cukup tanpa tambahan stateful SPA
+        |--------------------------------------------------------------------------
+        | Jika menggunakan Sanctum untuk API Token,
+        | tidak perlu konfigurasi tambahan.
         */
 
         // Alias middleware custom
         $middleware->alias([
-            'admin.role' => \App\Http\Middleware\RoleMiddleware::class,
+            'role' => \App\Http\Middleware\RoleMiddleware::class,
         ]);
 
     })

@@ -10,7 +10,7 @@ Route::prefix('v1')->group(function () {
     Route::post('login',
         'App\Http\Controllers\AuthController@login');
 
-    Route::middleware('auth:sanctum')->group(function () {
+    Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
 
         Route::apiResource('categories',
             'App\Http\Controllers\CategoryController')
